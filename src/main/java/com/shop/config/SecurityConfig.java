@@ -31,10 +31,13 @@ public class SecurityConfig {
                 .logoutRequestMatcher(new AntPathRequestMatcher("/members/logout"))
                 .logoutSuccessUrl("/");
         http.authorizeRequests()
-                .antMatchers("/css/**", "/js/**", "/img/**").permitAll()
-                .antMatchers("/", "/members/**", "/item/**", "/images/**").permitAll()
-                .antMatchers("/admin/**").hasRole("ADMIN")
+                .requestMatchers("/css/**", "/js/**", "/img/**").permitAll()
+                .requestMatchers("/", "/members/**", "/item/**", "/images/**").permitAll()
+                .requestMatchers("/admin/**").hasRole("ADMIN")
                 .anyRequest().authenticated();
+
+        http.exceptionHandling()
+                        .authenticationEntryPoint(new CustomAuthenticationEntryPoint());
 
         http.csrf().csrfTokenRepository(CookieCsrfTokenRepository.withHttpOnlyFalse());
         return http.build();
